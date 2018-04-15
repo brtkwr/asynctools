@@ -32,11 +32,10 @@ EXT = {
 
 semaphore = asyncio.Semaphore(20)
 
-async def download(URL, session, index):
+async def download(url, session, index):
     try:
         async with semaphore:
-            print(index)
-            async with session.get(URL) as response:
+            async with session.get(url) as response:
                 content = await response.read()
                 ctype = response.headers.get('content-type')
                 filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
@@ -46,15 +45,12 @@ async def download(URL, session, index):
                 return ctype
     except Exception as e:
         exception = type(e).__name__
-        if exception == 'KeyError':
-            print(index, exception, ctype, URL)
-        else:
-            print(index, exception, URL)
+        print(index, exception, url)
         return exception
  
 async def run():
     async with ClientSession() as session:
-        tasks = [asyncio.ensure_future(download(URL, session, index + START)) for index, URL in enumerate(URLS[START:END])]
+        tasks = [asyncio.ensure_future(download(URL.strip(), session, index + START)) for index, URL in enumerate(URLS[START:END])]
         return await asyncio.gather(*tasks)
  
 def get_images():
