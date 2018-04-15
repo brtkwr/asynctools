@@ -30,19 +30,26 @@ EXT = {
         'image/gif': 'gif',
     }
 
-async def download(url, session, index):
+semaphore = asyncio.Semaphore(20)
+
+async def download(URL, session, index):
     try:
-        async with session.get(url) as response:
-            content = await response.read()
-            ctype = response.headers.get('content-type')
-            filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
-            with open(filename, 'wb') as f:
-                f.write(content)
-                print(index, ctype)
-            return ctype
+        async with semaphore:
+            print(index)
+            async with session.get(URL) as response:
+                content = await response.read()
+                ctype = response.headers.get('content-type')
+                filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
+                with open(filename, 'wb') as f:
+                    f.write(content)
+                    print(index, ctype)
+                return ctype
     except Exception as e:
         exception = type(e).__name__
-        print(index, exception)
+        if exception == 'KeyError':
+            print(index, exception, ctype, URL)
+        else:
+            print(index, exception, URL)
         return exception
  
 async def run():
