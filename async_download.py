@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from aiohttp import ClientSession
+from glob import glob
 import asyncio
 import sys
 import numpy
@@ -31,19 +32,29 @@ EXT = {
         'image/gif': 'gif',
     }
 
-semaphore = asyncio.Semaphore(100)
+SKIP = set()
+for ext in EXT.values():
+    SKIP.update([fname.split('.')[0] for fname in glob('*.{}'.format(ext))])
+
+print('Skipping {} files'.format(len(SKIP)))
+
+semaphore = asyncio.Semaphore(50)
 
 async def download(url, session, index):
     try:
-        async with semaphore:
-            async with session.get(url) as response:
-                content = await response.read()
-                ctype = response.headers.get('content-type')
-                filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
-                with open(filename, 'wb') as f:
-                    f.write(content)
-                    print(index, ctype)
-                return ctype
+        if str(index) in SKIP:
+            print(index, 'Skipping')
+            return 'Skipping'
+        else:
+            async with semaphore:
+                async with session.get(url) as response:
+                    content = await response.read()
+                    ctype = response.headers.get('content-type')
+                    filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
+                    with open(filename, 'wb') as f:
+                        f.write(content)
+                        print(index, ctype)
+                    return ctype
     except Exception as e:
         exception = type(e).__name__
         if exception == 'KeyError':
