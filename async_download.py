@@ -3,6 +3,7 @@
 from aiohttp import ClientSession
 import asyncio
 import sys
+import numpy
 
 if len(sys.argv)>1:
     URLS_FILE = sys.argv[1]
@@ -45,12 +46,15 @@ async def download(url, session, index):
                 return ctype
     except Exception as e:
         exception = type(e).__name__
-        print(index, exception, url)
+        if exception == 'KeyError':
+            print(index, exception, ctype, url)
+        else:
+            print(index, exception, url)
         return exception
  
 async def run():
     async with ClientSession() as session:
-        tasks = [asyncio.ensure_future(download(URL.strip(), session, index + START)) for index, URL in enumerate(URLS[START:END])]
+        tasks = [asyncio.ensure_future(download(URL.strip(), session, int(index) + START)) for index, URL in numpy.random.permutation(list(enumerate(URLS[START:END])))]
         return await asyncio.gather(*tasks)
  
 def get_images():
