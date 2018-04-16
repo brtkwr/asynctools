@@ -10,7 +10,11 @@ import os
 if len(sys.argv)>1:
     URLS_FILE = sys.argv[1]
 else:
+<<<<<<< HEAD
     print('Usage: ./async.download.py <FILENAME.txt> <OPTIONAL: start line index> <OPTIONAL: end line index>')
+=======
+    print('Usage: ./async.download.py <URLS filename> <OPTIONAL: start line index> <OPTIONAL: end line index>')
+>>>>>>> db68e8241fc368308a3f1318910c68d9e38e8902
     sys.exit(1)
 
 with open(URLS_FILE) as f:
