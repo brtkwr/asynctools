@@ -31,7 +31,7 @@ EXT = {
         'image/gif': 'gif',
     }
 
-semaphore = asyncio.Semaphore(20)
+semaphore = asyncio.Semaphore(100)
 
 async def download(url, session, index):
     try:
@@ -53,7 +53,10 @@ async def download(url, session, index):
         return exception
  
 async def run():
-    async with ClientSession() as session:
+    headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6"
+        }
+    async with ClientSession(headers=headers) as session:
         tasks = [asyncio.ensure_future(download(URL.strip(), session, int(index) + START)) for index, URL in numpy.random.permutation(list(enumerate(URLS[START:END])))]
         return await asyncio.gather(*tasks)
  
