@@ -15,8 +15,13 @@ pip install -r requirements.txt
 
 # Usage
 
+
+
 ```
+./async_download.py <FILENAME.txt> <OPTIONAL: start line index> <OPTIONAL: end line index>
+
+e.g.
 ./async_download.py urls.txt
-./async_download.py urls.txt <begin>
-./async_download.py urls.txt <begin> <end>
+./async_download.py urls.txt 10000
+./async_download.py urls.txt 10000 20000
 ```

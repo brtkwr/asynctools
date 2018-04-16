@@ -5,15 +5,19 @@ from glob import glob
 import asyncio
 import sys
 import numpy
+import os
 
 if len(sys.argv)>1:
     URLS_FILE = sys.argv[1]
 else:
-    print('Usage: ./async.download.py <URLS FILE> <OPTIONAL:start_index> <OPTIONAL:end_index>')
+    print('Usage: ./async.download.py <FILENAME.txt> <OPTIONAL: start line index> <OPTIONAL: end line index>')
     sys.exit(1)
 
 with open(URLS_FILE) as f:
     URLS = f.readlines()
+
+LABEL = URLS_FILE.split('.')[0]
+os.makedirs(LABEL)
 
 START = 0
 END = len(URLS)
@@ -34,7 +38,7 @@ EXT = {
 
 SKIP = set()
 for ext in EXT.values():
-    SKIP.update([fname.split('.')[0] for fname in glob('*.{}'.format(ext))])
+    SKIP.update([fname.split('.')[0] for fname in glob('{}/*.{}'.format(LABEL,ext))])
 
 print('Skipping {} files'.format(len(SKIP)))
 
@@ -50,7 +54,7 @@ async def download(url, session, index):
                 async with session.get(url) as response:
                     content = await response.read()
                     ctype = response.headers.get('content-type')
-                    filename = '{}.{}'.format(str(index).zfill(ZFILL), EXT[ctype])
+                    filename = '{}/{}.{}'.format(LABEL,str(index).zfill(ZFILL), EXT[ctype])
                     with open(filename, 'wb') as f:
                         f.write(content)
                         print(index, ctype)
@@ -78,6 +82,6 @@ def get_images():
  
 responses = get_images()
 
-with open('response.log', 'w') as f:
+with open('{}.log'.format(LABEL), 'w') as f:
     for response in responses:
         f.write('{}\n'.format(response))
