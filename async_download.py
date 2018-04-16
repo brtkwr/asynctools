@@ -9,7 +9,7 @@ import numpy
 if len(sys.argv)>1:
     URLS_FILE = sys.argv[1]
 else:
-    print('Usage: ./async.download.py <URLS FILE> <OPTIONAL:start_index> <OPTIONAL:end_index>')
+    print('Usage: ./async.download.py <URLS filename> <OPTIONAL: start line index> <OPTIONAL: end line index>')
     sys.exit(1)
 
 with open(URLS_FILE) as f:
