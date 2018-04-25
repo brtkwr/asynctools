@@ -1,6 +1,11 @@
-# Description
+# Async tools
 
-Downloads list of image URLs in a file asynchronously using Python3
+[![Build Status](https://travis-ci.org/brtknr/asynctools.svg?branch=master)](https://travis-ci.org/brtknr/asynctools)
+
+- Downloader: downloads images in a list of URLs asynchronously
+- Resizer: resizes images in a specified folder asynchronously
+
+NOTE: requires Python 3.
 
 # Installation
 
