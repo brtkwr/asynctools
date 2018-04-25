@@ -12,5 +12,4 @@ python:
 install:
   - pip install .
 
-script:
-  - pytest
+script: python setup.py test
