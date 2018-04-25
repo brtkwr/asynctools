@@ -7,21 +7,28 @@ Downloads list of image URLs in a file asynchronously using Python3
 After cloning,
 
 ```
-cd async_download
+cd asynctools
 virtualenv -p python3 .
-pip install -U pip
-pip install -r requirements.txt
+pip install .
 ```
 
 # Usage
 
 
-
+## Downloader
 ```
-./async_download.py <FILENAME.txt> <OPTIONAL: start line index> <OPTIONAL: end line index>
+download_async <LABEL> <OPTIONAL: start line index> <OPTIONAL: end line index>
 
 e.g.
-./async_download.py urls.txt
-./async_download.py urls.txt 10000
-./async_download.py urls.txt 10000 20000
+download_async urls
+download_async urls 10000
+download_async urls 10000 20000
+```
+
+## Resizer
+```
+resize_async <LABEL> <INPUT_FORMAT> <OUTPUT FORMAT> <MIN SIZE> <MAX RATIO>
+
+e.g.
+resize_async urls jpeg jpeg 300 2.0
 ```
