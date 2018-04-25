@@ -5,7 +5,7 @@
 - Downloader: downloads images in a list of URLs asynchronously
 - Resizer: resizes images in a specified folder asynchronously
 
-NOTE: requires Python 3.
+NOTE: requires Python 3.5 or above.
 
 # Installation
 
